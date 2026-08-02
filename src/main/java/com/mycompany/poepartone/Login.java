@@ -56,8 +56,8 @@ public class Login {
         message = "Username is not correctly formatted; please ensure that your username contains an underscore and"
                 + " is no more than five characters in length.";
     } else if (!checkPasswordComplexity(password)) {
-        message = "Password is not correctly formatted; please ensure that the password contains at least eight characters,"
-                + " a capital letter, a number and a special character.";
+        message = "Password is not correctly formatted; please ensure that the password contains at least eight characters, "
+                + "a capital letter, a number and a special character.";
     } else if (!checkCellPhoneNumber(cellPhoneNumber)){
         message = ("Cell phone number is incorrectly formatted or does not contain an international code.");
        
