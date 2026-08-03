@@ -225,7 +225,7 @@ public void testReturnLoginStatus_valid() {
 }
 
 /**
-     * Test of returnLoginStatus method, of class Login.
+     * Test of returnLoginStatus method, of class Login when invalid.
      */
     @org.junit.jupiter.api.Test
 public void testReturnLoginStatus_invalid() {
