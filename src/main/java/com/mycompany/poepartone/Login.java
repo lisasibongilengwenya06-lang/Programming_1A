@@ -12,8 +12,7 @@ public class Login {
     public boolean checkUserName(String username) {
         boolean isValid = false;
         
-        if (username .contains("_") && username.length()<=5) { //checks if username has specifics
-            isValid = true;
+        if (username .contains("_") && username.length()<=5) { //checks if username has an underscore and is less than 5 characters
         }
         
         return isValid;
@@ -44,24 +43,23 @@ public class Login {
         }
         return isValid;
     }
-    public boolean checkCellPhoneNumber(String cellPhoneNumber){
-    String pattern = "^\\+27\\d{9}$";
+    public boolean checkCellPhoneNumber(String cellPhoneNumber){ 
     boolean isValid = cellPhoneNumber.matches(pattern);
     return isValid;
 }
     public String registerUser(String username, String password, String cellPhoneNumber) {
     String message = "";
        
-    if (!checkUserName(username)) {
+    if (!checkUserName(username)) { //message if username invalid
         message = "Username is not correctly formatted; please ensure that your username contains an underscore and"
                 + " is no more than five characters in length.";
-    } else if (!checkPasswordComplexity(password)) {
+    } else if (!checkPasswordComplexity(password)) { //message if password invalid
         message = "Password is not correctly formatted; please ensure that the password contains at least eight characters, "
                 + "a capital letter, a number and a special character.";
-    } else if (!checkCellPhoneNumber(cellPhoneNumber)){
+    } else if (!checkCellPhoneNumber(cellPhoneNumber)){ //message if cell number invalid
         message = ("Cell phone number is incorrectly formatted or does not contain an international code.");
        
-    } else {
+    } else { //message when all is well
         message = "Username successfully captured. Password successfully captured. Cell phone number successfully added";
     }
     
@@ -77,7 +75,7 @@ public class Login {
     public String returnLoginStatus(boolean isValid, String name, String surname) {
         String message = "";
         
-        if (isValid) {
+        if (isValid) { //when user returns to app message
             message = "Welcome " + name + ", " + surname + " it is great to see you again.";
         } else {
             message = "Username or password incorrect, please try again.";
