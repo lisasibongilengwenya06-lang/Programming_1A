@@ -10,14 +10,13 @@ package com.mycompany.poepartone;
  */
 public class Login {
     public boolean checkUserName(String username) {
-        boolean isValid = false;
-        
-        if (username .contains("_") && username.length()<=5) { //checks if username has an underscore and is less than 5 characters
-        }
-        
-        return isValid;
+    boolean isValid = false;
+    if (username.contains("_") && username.length() <= 5) { //checks if username has an underscore and is less than 5 characters
+        isValid = true;
     }
-    public boolean checkPasswordComplexity(String password) { //checks if password has specifics
+    return isValid;
+}
+    public boolean checkPasswordComplexity(String password) { //Checks password meets complexity rules: 8+ characters, capital letter, number, special character
         boolean hasCapital = false;
         boolean hasNumber = false;
         boolean hasSpecialChar = false;
@@ -43,21 +42,20 @@ public class Login {
         }
         return isValid;
     }
-    public boolean checkCellPhoneNumber(String cellPhoneNumber) {
+    public boolean checkCellPhoneNumber(String cellPhoneNumber) { //Checks cell number matches SA international format (+27 followed by 9 digits) using regex
     String pattern = "^\\+27\\d{9}$";
     boolean isValid = cellPhoneNumber.matches(pattern);
     return isValid;
 }
     
-    public String registerUser(String username, String password, String cellPhoneNumber) {
+    public String registerUser(String username, String password, String cellPhoneNumber) { //Registers a user by validating username, password, and cell number, returning the appropriate message
     String message = "";
        
     if (!checkUserName(username)) { //message if username invalid
         message = "Username is not correctly formatted; please ensure that your username contains an underscore and"
                 + " is no more than five characters in length.";
     } else if (!checkPasswordComplexity(password)) { //message if password invalid
-        message = "Password is not correctly formatted; please ensure that the password contains at least eight characters, "
-                + "a capital letter, a number and a special character.";
+        message = "Password is not correctly formatted; please ensure that the password contains at least eight characters, a capital letter, a number and a special character.";
     } else if (!checkCellPhoneNumber(cellPhoneNumber)){ //message if cell number invalid
         message = ("Cell phone number is incorrectly formatted or does not contain an international code.");
        
@@ -67,14 +65,14 @@ public class Login {
     
     return message;
 }
-    public boolean loginUser(String username, String password, String storedUsername, String storedPassword) {
+    public boolean loginUser(String username, String password, String storedUsername, String storedPassword) { //Verifies that entered login credentials match the credentials stored at registration
     boolean isValid = false;
     if (username.equals(storedUsername) && password.equals(storedPassword)) {
         isValid = true;
     }
     return isValid;
 }
-    public String returnLoginStatus(boolean isValid, String name, String surname) {
+    public String returnLoginStatus(boolean isValid, String name, String surname) { // Returns the welcome message on successful login or a failure message on unsuccessful login
         String message = "";
         
         if (isValid) { //when user returns to app message
