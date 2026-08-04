@@ -15,23 +15,23 @@ public class PoePartOne {
         Scanner input = new Scanner(System.in);
         Account register = new Account();
         
-        System.out.println("Enter your name"); //user enter name
+        System.out.println("Enter your name"); //user enters name
         String name = input.nextLine();
         register.name = name;
         
-        System.out.println("Enter your surname"); //user enter surname
+        System.out.println("Enter your surname"); //user enters surname
         String surname = input.nextLine();
         register.surname = surname;
         
-        System.out.println("Enter your username"); //user enter username
+        System.out.println("Enter your username"); //user enters username
         String username = input.nextLine();
         register.username = username;
         
-        System.out.println("Enter a password"); //user enter password
+        System.out.println("Enter a password"); //user entser password
         String password = input.nextLine();
         register.password = password;
         
-        System.out.println("Enter your cell phone number"); // user enter cell no. 
+        System.out.println("Enter your cell phone number"); // user enters cell no. 
         String cellPhoneNumber = input.nextLine();
         register.cellPhoneNumber = cellPhoneNumber;
        
@@ -58,6 +58,6 @@ public class PoePartOne {
         System.out.println(login.loginUser("kyl_1", "Ch&&sec@ke99!", "kyl_1", "Ch&&sec@ke99!")); // should print true — matches
         System.out.println(login.loginUser("kyl_1", "wrongpass", "kyl_1", "Ch&&sec@ke99!"));      // should print false — password mismatch
         System.out.println(login.returnLoginStatus(true, "Lisa", "Ngwenya"));   // should print welcome message
-System.out.println(login.returnLoginStatus(false, "Lisa", "Ngwenya"));  // should print failure message
+        System.out.println(login.returnLoginStatus(false, "Lisa", "Ngwenya"));  // should print failure message
     }
 }

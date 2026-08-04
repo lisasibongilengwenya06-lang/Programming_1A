@@ -13,6 +13,5 @@ public class Account {
     String password;
     String cellPhoneNumber;
     String name;
-    String surname;
-    
+    String surname;   
 }
