@@ -43,10 +43,12 @@ public class Login {
         }
         return isValid;
     }
-    public boolean checkCellPhoneNumber(String cellPhoneNumber){ 
+    public boolean checkCellPhoneNumber(String cellPhoneNumber) {
+    String pattern = "^\\+27\\d{9}$";
     boolean isValid = cellPhoneNumber.matches(pattern);
     return isValid;
 }
+    
     public String registerUser(String username, String password, String cellPhoneNumber) {
     String message = "";
        
