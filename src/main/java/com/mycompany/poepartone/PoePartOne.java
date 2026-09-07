@@ -15,6 +15,7 @@ public class PoePartOne {
         Login account = new Login();
         Scanner scan = new Scanner(System.in);
 
+        System.out.println("\n===== Registration =====");
         System.out.println("Enter your name");
         String name = scan.nextLine();
         System.out.println("Enter your surname");
