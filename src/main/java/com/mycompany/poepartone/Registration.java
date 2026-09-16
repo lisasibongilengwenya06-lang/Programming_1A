@@ -17,7 +17,7 @@ public class Registration {
     
     public boolean checkUserName(String username) {
         boolean isValid = false;
-        if (username.contains("_") && username.length() <= 5) {
+        if (username.contains("_") && username.length() <= 5) {  //condition for username to have an underscore and be less than 5 characters  
             isValid = true;
         }
         return isValid;
@@ -28,7 +28,7 @@ public class Registration {
         boolean hasNumber = false;
         boolean hasSpecialChar = false;
 
-        for (int i = 0; i < password.length(); i++) {
+        for (int i = 0; i < password.length(); i++) { //condition which checks the user's password if it has an uppercase, number and special character
             char c = password.charAt(i);
             if (Character.isUpperCase(c)) hasCapital = true;
             if (Character.isDigit(c)) hasNumber = true;
@@ -47,7 +47,7 @@ public class Registration {
         return cellPhoneNumber.matches(pattern);
     }
 
-    public String registerUser(String username, String password, String cellPhoneNumber) {
+    public String registerUser(String username, String password, String cellPhoneNumber) { //outcome if username, password or cell number does not meet conditions
         String message = "";
         if (!checkUserName(username)) {
             message = "Username is not correctly formatted; please ensure that your username contains an underscore and"
@@ -61,7 +61,7 @@ public class Registration {
             this.username = username;
             this.password = password;
             this.cellPhoneNumber = cellPhoneNumber;
-            message = "Username successfully captured. Password successfully captured. Cell phone number successfully added";
+            message = "Username successfully captured. Password successfully captured. Cell phone number successfully added"; //outcome if everything meets conditons
         }
         return message;
     }
