@@ -12,18 +12,22 @@ import java.util.Random;
  * @author Admin
  */
 public class Message {
-    // Instance fields for one message
+    // Instance fields for one message[cite: 10]
     private String messageID;
     private int messageNumber;
     private String recipient;
     private String messageText;
     private String messageHash;
 
-    // Shared static storage
+    // Shared static storage[cite: 10]
     private static ArrayList<Message> sentMessagesList = new ArrayList<>();
     private static int totalMessagesSent = 0;
 
-    // Constructor taking recipient and text from the user, receives the ID and number as parameters and only generates the hash
+    // Default no-argument constructor
+    // Allows calling validation and utility methods before creating a full object instance
+    public Message() { }
+
+    // Parameterized constructor taking recipient, messageText, messageID, and messageNumber[cite: 11]
     public Message(String recipient, String messageText, String messageID, int messageNumber) {
         this.recipient = recipient;
         this.messageText = messageText;
@@ -32,13 +36,14 @@ public class Message {
         this.messageHash = createMessageHash(messageID, messageNumber, messageText);
     }
 
-    // Getters for displaying details later
+    // Getters[cite: 11]
     public String getMessageID() { return messageID; }
     public int getMessageNumber() { return messageNumber; }
     public String getRecipient() { return recipient; }
     public String getMessageText() { return messageText; }
     public String getMessageHash() { return messageHash; }
 
+    // --- Validation Methods ---
     public boolean checkMessageID(String messageID) {
         return messageID != null && messageID.length() <= 10;
     }
@@ -54,6 +59,25 @@ public class Message {
         }
     }
 
+    public String checkMessageLength(String messageText) {
+        if (messageText != null && messageText.length() <= 250) {
+            return "Message ready to send.";
+        } else {
+            int excess = messageText != null ? messageText.length() - 250 : 0;
+            return "Message exceeds 250 characters by " + excess + "; please reduce the size.";
+        }
+    }
+
+    // --- Utility Methods ---
+    public String generateMessageID() {
+        Random rand = new Random();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            sb.append(rand.nextInt(10));
+        }
+        return sb.toString();
+    }
+
     public String createMessageHash(String messageID, int messageNumber, String messageText) {
         String subID = (messageID != null && messageID.length() >= 2) ? messageID.substring(0, 2) : "00";
         
@@ -67,7 +91,6 @@ public class Message {
     public String sentMessage(int choice) {
         switch (choice) {
             case 1:
-                // When sent, add the current object to the list and increment the counter
                 sentMessagesList.add(this);
                 totalMessagesSent++;
                 return "Message successfully sent.";
@@ -81,46 +104,25 @@ public class Message {
     }
 
     public String printMessages() {
-        // Loop over the list of sent messages and format them
         StringBuilder sb = new StringBuilder();
         for (Message m : sentMessagesList) {
-            sb.append("Message ID: ").append(m.getMessageID()).append("\n")
-              .append("Message Hash: ").append(m.getMessageHash()).append("\n")
-              .append("Recipient: ").append(m.getRecipient()).append("\n")
-              .append("Message: ").append(m.getMessageText()).append("\n\n");
+            sb.append("Message ID   : ").append(m.getMessageID()).append("\n")
+              .append("Message Hash : ").append(m.getMessageHash()).append("\n")
+              .append("Recipient    : ").append(m.getRecipient()).append("\n")
+              .append("Message      : ").append(m.getMessageText()).append("\n\n");
         }
         return sb.toString();
     }
 
     public int returnTotalMessages() {
-        // Return the total counter
         return totalMessagesSent;
     }
 
     public void storeMessage() {
-        // Research needed for JSON file storage
         try {
-            // Implementation for JSON storage goes here
+            // JSON file storage implementation research placeholder[cite: 3, 4]
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    public String checkMessageLength(String messageText) {
-    if (messageText != null && messageText.length() <= 250) {
-        return "Message ready to send.";
-    } else {
-        int excess = messageText != null ? messageText.length() - 250 : 0;
-        return "Message exceeds 250 characters by " + excess + "; please reduce the size.";
-    }
-}
-    
-    public String generateMessageID() {
-    Random rand = new Random();
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < 10; i++) {
-        sb.append(rand.nextInt(10));
-    }
-    return sb.toString();
-}
 }
