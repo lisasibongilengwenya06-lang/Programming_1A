@@ -6,6 +6,8 @@ package com.mycompany.poepartone;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  *
@@ -118,11 +120,31 @@ public class Message {
         return totalMessagesSent;
     }
 
-    public void storeMessage() {
-        try {
-            // JSON file storage implementation research placeholder[cite: 3, 4]
-        } catch (Exception e) {
-            e.printStackTrace();
+    // Stored messages are kept separate from sent messages
+private static ArrayList<Message> storedMessagesList = new ArrayList<>();
+    
+    // JSON array format based on the JSON specification: https://www.json.org (add any other sources you used)
+public void storeMessage() {
+    storedMessagesList.add(this);
+    System.out.println("Saved to: " + new java.io.File("storedMessages.json").getAbsolutePath());
+    try (FileWriter writer = new FileWriter("storedMessages.json")) {
+        writer.write("[\n");
+        for (int i = 0; i < storedMessagesList.size(); i++) {
+            Message m = storedMessagesList.get(i);
+            writer.write("  {\n");
+            writer.write("    \"messageID\": \"" + escapeJson(m.messageID) + "\",\n");
+            writer.write("    \"messageHash\": \"" + escapeJson(m.messageHash) + "\",\n");
+            writer.write("    \"recipient\": \"" + escapeJson(m.recipient) + "\",\n");
+            writer.write("    \"message\": \"" + escapeJson(m.messageText) + "\"\n");
+            writer.write("  }" + (i < storedMessagesList.size() - 1 ? "," : "") + "\n");
         }
+        writer.write("]\n");
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
+
+private static String escapeJson(String text) {
+    return text == null ? "" : text.replace("\\", "\\\\").replace("\"", "\\\"");
+}
 }
