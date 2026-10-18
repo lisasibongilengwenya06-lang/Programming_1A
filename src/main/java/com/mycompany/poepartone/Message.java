@@ -126,7 +126,6 @@ private static ArrayList<Message> storedMessagesList = new ArrayList<>();
     // JSON array format based on the JSON specification: https://www.json.org (add any other sources you used)
 public void storeMessage() {
     storedMessagesList.add(this);
-    System.out.println("Saved to: " + new java.io.File("storedMessages.json").getAbsolutePath());
     try (FileWriter writer = new FileWriter("storedMessages.json")) {
         writer.write("[\n");
         for (int i = 0; i < storedMessagesList.size(); i++) {
