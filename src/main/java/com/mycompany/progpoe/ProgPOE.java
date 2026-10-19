@@ -1,7 +1,7 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-package com.mycompany.poepartone;
+package com.mycompany.progpoe;
 
 import java.util.Scanner;
 
