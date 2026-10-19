@@ -1,7 +1,7 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-package com.mycompany.poepartone;
+package com.mycompany.progpoe;
 
 import java.util.Scanner;
 
@@ -9,7 +9,7 @@ import java.util.Scanner;
  *
  * @author Admin
  */
-public class PoePartOne {
+public class ProgPOE {
 
     public static void main(String[] args) {
         Login account = new Login();
