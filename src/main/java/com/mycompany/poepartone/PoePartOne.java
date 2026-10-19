@@ -42,86 +42,34 @@ public class PoePartOne {
             boolean isValid = account.loginUser(loginUsername, loginPassword, account.username, account.password);
             System.out.println(account.returnLoginStatus(isValid, account.name, account.surname));
 
+            // Messages can only be sent after a successful login
             if (isValid) {
                 runQuickChat(scan);
             }
         }
     }
 
+    /** Shows the welcome message, asks how many messages to enter, then runs the menu until the user quits. */
     private static void runQuickChat(Scanner scan) {
         System.out.println("Welcome to QuickChat.");
-        System.out.print("How many messages would you like to enter? ");
-        int totalMessagesToEnter = scan.nextInt();
-        scan.nextLine();
+        int totalMessagesToEnter = readInt(scan, "How many messages would you like to enter? ");
 
-        int menuChoice = 0;
-        boolean allEntered = false;
         Message helper = new Message();
+        boolean allEntered = false;
+        int menuChoice = 0;
 
         while (menuChoice != 3) {
             System.out.println("\n--- QuickChat Menu ---");
             System.out.println("1) Send Messages");
             System.out.println("2) Show recently sent messages");
             System.out.println("3) Quit");
-            System.out.print("Select an option: ");
-            menuChoice = scan.nextInt();
-            scan.nextLine();
+            menuChoice = readInt(scan, "Select an option: ");
 
             if (menuChoice == 1) {
                 if (allEntered) {
                     System.out.println("Limit reached. All messages for this session have already been entered.");
                 } else {
-                    for (int i = 0; i < totalMessagesToEnter; i++) {
-                        System.out.println("\n--- Entering Message " + (i + 1) + " of " + totalMessagesToEnter + " ---");
-
-                        System.out.print("Enter recipient cell number: ");
-                        String recipient = scan.nextLine();
-                        String cellCheck = helper.checkRecipientCell(recipient);
-                        System.out.println(cellCheck);
-                        if (!cellCheck.contains("successfully captured")) {
-                            System.out.println("Please try entering this message again.");
-                            i--;
-                            continue;
-                        }
-
-                        System.out.print("Enter message text (max 250 characters): ");
-                        String messageText = scan.nextLine();
-                        String lengthCheck = helper.checkMessageLength(messageText);
-                        System.out.println(lengthCheck);
-                        if (!lengthCheck.contains("ready to send")) {
-                            System.out.println("Please try entering this message again.");
-                            i--;
-                            continue;
-                        }
-
-                        String generatedID = helper.generateMessageID();
-                        System.out.println("Message ID generated: " + generatedID);
-
-                        Message activeMessage = new Message(recipient, messageText, generatedID, i);
-
-                        System.out.println("Choose an action:");
-                        System.out.println("1) Send Message");
-                        System.out.println("2) Disregard Message");
-                        System.out.println("3) Store Message to send later");
-                        System.out.print("Enter choice (1-3): ");
-                        int actionChoice = scan.nextInt();
-                        scan.nextLine();
-
-                        System.out.println(activeMessage.sentMessage(actionChoice));
-
-                        if (actionChoice == 3) {
-                            activeMessage.storeMessage();
-                        }
-
-                        if (actionChoice == 1) {
-                            System.out.println("\n====== Sent Message Details ======");
-                            System.out.println("Message ID   : " + activeMessage.getMessageID());
-                            System.out.println("Message Hash : " + activeMessage.getMessageHash());
-                            System.out.println("Recipient    : " + activeMessage.getRecipient());
-                            System.out.println("Message      : " + activeMessage.getMessageText());
-                            System.out.println("==================================");
-                        }
-                    }
+                    enterMessages(scan, helper, totalMessagesToEnter);
                     allEntered = true;
                 }
             } else if (menuChoice == 2) {
@@ -134,5 +82,74 @@ public class PoePartOne {
         }
 
         System.out.println("\nTotal messages sent this session: " + helper.returnTotalMessages());
+    }
+
+    /** Uses a for loop to collect the set number of messages. The loop counter is the message number. */
+    private static void enterMessages(Scanner scan, Message helper, int totalMessagesToEnter) {
+        for (int i = 0; i < totalMessagesToEnter; i++) {
+            System.out.println("\n--- Entering Message " + (i + 1) + " of " + totalMessagesToEnter + " ---");
+
+            String recipient;
+            String cellCheck;
+            do {
+                System.out.print("Enter recipient cell number: ");
+                recipient = scan.nextLine();
+                cellCheck = helper.checkRecipientCell(recipient);
+                System.out.println(cellCheck);
+            } while (!cellCheck.contains("successfully captured"));
+
+            String messageText;
+            String lengthCheck;
+            do {
+                System.out.print("Enter message text (max 250 characters): ");
+                messageText = scan.nextLine();
+                lengthCheck = helper.checkMessageLength(messageText);
+                System.out.println(lengthCheck);
+            } while (!lengthCheck.contains("ready to send"));
+
+            String generatedID = helper.generateMessageID();
+            System.out.println("Message ID generated: " + generatedID);
+
+            Message activeMessage = new Message(recipient, messageText, generatedID, i);
+
+            System.out.println("Choose an action:");
+            System.out.println("1) Send Message");
+            System.out.println("2) Disregard Message");
+            System.out.println("3) Store Message to send later");
+            int actionChoice = readInt(scan, "Enter choice (1-3): ");
+            while (actionChoice < 1 || actionChoice > 3) {
+                actionChoice = readInt(scan, "Invalid choice. Enter choice (1-3): ");
+            }
+
+            System.out.println(activeMessage.sentMessage(actionChoice));
+
+            if (actionChoice == 3) {
+                activeMessage.storeMessage();
+            } else if (actionChoice == 1) {
+                displayMessage(activeMessage);
+            }
+        }
+    }
+
+    /** Prints the message details in the required order: ID, hash, recipient, message. */
+    private static void displayMessage(Message message) {
+        System.out.println("\n====== Sent Message Details ======");
+        System.out.println("Message ID   : " + message.getMessageID());
+        System.out.println("Message Hash : " + message.getMessageHash());
+        System.out.println("Recipient    : " + message.getRecipient());
+        System.out.println("Message      : " + message.getMessageText());
+        System.out.println("==================================");
+    }
+
+    /** Keeps asking until the user types a whole number, so letters cannot crash the program. */
+    private static int readInt(Scanner scan, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            try {
+                return Integer.parseInt(scan.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a number.");
+            }
+        }
     }
 }

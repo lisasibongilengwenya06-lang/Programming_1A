@@ -85,4 +85,18 @@ public class MessageTest {
         Message m = new Message("+27718693002", "Hi Mike, can you join us for dinner tonight?", "0012345678", 0);
         assertEquals("Message successfully stored.", m.sentMessage(3));
     }
+    
+     @Test
+    public void testPrintMessagesShowsSentMessage() {
+        Message m = new Message("+27718693002", "Hi Mike, can you join us for dinner tonight?", "0012345678", 0);
+        m.sentMessage(1);
+        String output = helper.printMessages();
+        assertTrue(output.contains("00:0:HITONIGHT"));
+        assertTrue(output.contains("+27718693002"));
+    }
+
+    @Test
+    public void testInvalidChoice() {
+        assertEquals("Invalid choice selected.", new Message().sentMessage(9));
+    }
 }
