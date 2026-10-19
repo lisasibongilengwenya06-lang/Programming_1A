@@ -9,7 +9,7 @@ import java.util.Scanner;
  *
  * @author Admin
  */
-public class PoePartOne {
+public class ProgPOE {
 
     public static void main(String[] args) {
         Login account = new Login();
