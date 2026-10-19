@@ -31,7 +31,7 @@ public class Message {
     // Allows calling validation and utility methods before creating a full object instance
     public Message() { }
 
-    // Parameterized constructor taking recipient, messageText, messageID, and messageNumber[cite: 11]
+    // Parameterized constructor taking recipient, messageText, messageID, and messageNumber
     /** Creates a message and builds its hash from the ID, message number and text. */
     public Message(String recipient, String messageText, String messageID, int messageNumber) {
         this.recipient = recipient;
@@ -71,7 +71,7 @@ public class Message {
         return "Message exceeds 250 characters by " + excess + "; please reduce the size.";
     }
 
-    /** Generates a random ten-digit ID (kept as text so leading zeros stay) that has not been used yet. */
+    /** Generates a random ten-digit ID  that has not been used yet. */
     public String generateMessageID() {
         Random rand = new Random();
         String id;
@@ -147,7 +147,7 @@ public class Message {
 
 
     
-    // JSON array format based on the JSON specification: https://www.json.org (add any other sources you used)
+    // JSON array format : https://www.json.org 
 public void storeMessage() {
         storedMessagesList.add(this);
         try (FileWriter writer = new FileWriter("storedMessages.json")) {
