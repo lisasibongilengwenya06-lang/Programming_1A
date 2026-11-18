@@ -44,6 +44,7 @@ public class ProgPOE {
 
             // Messages can only be sent after a successful login
             if (isValid) {
+                Message.setSender(account.name + " " + account.surname);
                 runQuickChat(scan);
             }
         }

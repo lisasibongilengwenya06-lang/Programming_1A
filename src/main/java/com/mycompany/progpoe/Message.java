@@ -4,34 +4,49 @@
  */
 package com.mycompany.progpoe;
 
-import java.util.ArrayList;
-import java.util.Random;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
+ * Represents one chat message and keeps the shared arrays of sent, disregarded and stored messages.
  *
  * @author Admin
  */
 public class Message {
-    // Instance fields for one message
+
+    // Details of a single message
     private String messageID;
     private int messageNumber;
     private String recipient;
     private String messageText;
     private String messageHash;
 
-    // Shared static storage
-     private static ArrayList<Message> sentMessagesList = new ArrayList<>();
+    // Message objects used for the Part 2 report and the JSON file
+    private static ArrayList<Message> sentMessagesList = new ArrayList<>();
     private static ArrayList<Message> storedMessagesList = new ArrayList<>();
     private static int totalMessagesSent = 0;
 
-    // Default no-argument constructor
-    // Allows calling validation and utility methods before creating a full object instance
+    // Final PoE arrays: the message text of each category
+    private static ArrayList<String> sentMessages = new ArrayList<>();
+    private static ArrayList<String> disregardedMessages = new ArrayList<>();
+    private static ArrayList<String> storedMessages = new ArrayList<>();
+
+    // Parallel arrays: the same index in each list belongs to the same message
+    private static ArrayList<String> messageIDs = new ArrayList<>();
+    private static ArrayList<String> messageHashes = new ArrayList<>();
+    private static ArrayList<String> recipients = new ArrayList<>();
+    private static ArrayList<String> senders = new ArrayList<>();
+    private static ArrayList<String> messageTexts = new ArrayList<>();
+    private static ArrayList<String> flags = new ArrayList<>();   // "Sent", "Stored" or "Disregard"
+
+    // The logged-in user who is sending the messages
+    private static String sender = "";
+
+    /** Empty constructor so the check and utility methods can be used without a full message. */
     public Message() { }
 
-    // Parameterized constructor taking recipient, messageText, messageID, and messageNumber
     /** Creates a message and builds its hash from the ID, message number and text. */
     public Message(String recipient, String messageText, String messageID, int messageNumber) {
         this.recipient = recipient;
@@ -41,13 +56,38 @@ public class Message {
         this.messageHash = createMessageHash(messageID, messageNumber, messageText);
     }
 
-    // Getters
     public String getMessageID() { return messageID; }
     public int getMessageNumber() { return messageNumber; }
     public String getRecipient() { return recipient; }
     public String getMessageText() { return messageText; }
     public String getMessageHash() { return messageHash; }
-    
+
+    /** Sets the logged-in user's name so it can be shown as the sender. */
+    public static void setSender(String senderName) { sender = senderName; }
+
+    public static ArrayList<String> getSentMessages() { return sentMessages; }
+    public static ArrayList<String> getDisregardedMessages() { return disregardedMessages; }
+    public static ArrayList<String> getStoredMessages() { return storedMessages; }
+    public static ArrayList<String> getMessageIDs() { return messageIDs; }
+    public static ArrayList<String> getMessageHashes() { return messageHashes; }
+
+    /** Empties every array and counter (used by the unit tests so each test starts fresh). */
+    public static void clearAllMessages() {
+        sentMessagesList.clear();
+        storedMessagesList.clear();
+        sentMessages.clear();
+        disregardedMessages.clear();
+        storedMessages.clear();
+        messageIDs.clear();
+        messageHashes.clear();
+        recipients.clear();
+        senders.clear();
+        messageTexts.clear();
+        flags.clear();
+        totalMessagesSent = 0;
+        sender = "";
+    }
+
     /** Checks that the message ID is not more than ten characters. */
     public boolean checkMessageID(String messageID) {
         return messageID != null && messageID.length() <= 10;
@@ -71,7 +111,7 @@ public class Message {
         return "Message exceeds 250 characters by " + excess + "; please reduce the size.";
     }
 
-    /** Generates a random ten-digit ID  that has not been used yet. */
+    /** Generates a random ten-digit ID (kept as text so leading zeros stay) that has not been used yet. */
     public String generateMessageID() {
         Random rand = new Random();
         String id;
@@ -84,7 +124,7 @@ public class Message {
         } while (isIDUsed(id));
         return id;
     }
-    
+
     /** Returns true if the ID already belongs to a sent or stored message. */
     private boolean isIDUsed(String id) {
         for (Message m : sentMessagesList) {
@@ -111,22 +151,37 @@ public class Message {
         return subID + ":" + messageNumber + ":" + (firstWord + lastWord).toUpperCase();
     }
 
-    /** Handles the user's choice: 1 = send, 2 = disregard, 3 = store. */
+    /** Handles the user's choice: 1 = send, 2 = disregard, 3 = store, and fills the matching arrays. */
     public String sentMessage(int choice) {
         switch (choice) {
             case 1:
                 sentMessagesList.add(this);
                 totalMessagesSent++;
+                sentMessages.add(messageText);
+                recordMessage("Sent");
                 return "Message successfully sent.";
             case 2:
+                disregardedMessages.add(messageText);
+                recordMessage("Disregard");
                 return "Press 0 to delete the message.";
             case 3:
+                storedMessages.add(messageText);
+                recordMessage("Stored");
                 return "Message successfully stored.";
             default:
                 return "Invalid choice selected.";
         }
     }
 
+    /** Adds this message's details to the parallel arrays. */
+    private void recordMessage(String flag) {
+        messageIDs.add(messageID);
+        messageHashes.add(messageHash);
+        recipients.add(recipient);
+        senders.add(sender);
+        messageTexts.add(messageText);
+        flags.add(flag);
+    }
 
     /** Returns the details of every message sent while the program is running. */
     public String printMessages() {
@@ -145,10 +200,12 @@ public class Message {
         return totalMessagesSent;
     }
 
-
-    
-    // JSON array format : https://www.json.org 
-public void storeMessage() {
+    /**
+     * Adds this message to the stored list and writes all stored messages to storedMessages.json.
+     * The JSON layout follows the format described on json.org.
+     * Reference: JSON.org (n.d.) Introducing JSON. Available at: https://www.json.org (Accessed: 19 October 2026).
+     */
+    public void storeMessage() {
         storedMessagesList.add(this);
         try (FileWriter writer = new FileWriter("storedMessages.json")) {
             writer.write("[\n");
