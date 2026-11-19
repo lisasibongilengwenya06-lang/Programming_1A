@@ -7,6 +7,7 @@ package com.mycompany.progpoe;
 import com.mycompany.progpoe.Message;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
 /**
  *
@@ -99,5 +100,45 @@ public class MessageTest {
     @Test
     public void testInvalidChoice() {
         assertEquals("Invalid choice selected.", new Message().sentMessage(9));
+    }
+    
+        @Test
+    public void testArraysPopulated() {
+        Message.clearAllMessages();
+        new Message("+27834557896", "Did you get the cake?", "1111111111", 0).sentMessage(1);
+        new Message("+27838884567", "Where are you? You are late! I have asked you to be on time.", "2222222222", 1).sentMessage(3);
+        new Message("+27834484567", "Yohoooo, I am at your gate.", "3333333333", 2).sentMessage(2);
+        new Message("+27830000004", "It is dinner time!", "0838884567", 3).sentMessage(1);
+        new Message("+27838884567", "Ok, I am leaving without you.", "5555555555", 4).sentMessage(3);
+
+        assertEquals(List.of("Did you get the cake?", "It is dinner time!"), Message.getSentMessages());
+        assertEquals(List.of("Yohoooo, I am at your gate."), Message.getDisregardedMessages());
+        assertEquals(2, Message.getStoredMessages().size());
+        assertEquals(5, Message.getMessageHashes().size());
+        assertEquals(5, Message.getMessageIDs().size());
+    }
+    
+        @Test
+    public void testStoredMessagesReadFromJson() throws Exception {
+        Message.clearAllMessages();
+        java.io.File temp = java.io.File.createTempFile("stored", ".json");
+        Message.setStorageFile(temp.getAbsolutePath());
+        Message.setSender("Lisa Ngwenya");
+
+        Message first = new Message("+27838884567", "Where are you? You are late! I have asked you to be on time.", "2222222222", 1);
+        first.sentMessage(3);
+        first.storeMessage();
+        Message second = new Message("+27838884567", "Ok, I am leaving without you.", "5555555555", 4);
+        second.sentMessage(3);
+        second.storeMessage();
+
+        Message.loadStoredMessages();   // reads the JSON file back into the arrays
+
+        assertEquals(2, Message.getStoredMessages().size());
+        assertEquals("Ok, I am leaving without you.", Message.getStoredMessages().get(1));
+        assertTrue(new Message().storedMessagesReport().contains("Lisa Ngwenya"));
+
+        Message.clearAllMessages();
+        temp.delete();
     }
 }
