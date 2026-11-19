@@ -53,6 +53,7 @@ public class ProgPOE {
     /** Shows the welcome message, asks how many messages to enter, then runs the menu until the user quits. */
     private static void runQuickChat(Scanner scan) {
         System.out.println("Welcome to QuickChat.");
+        Message.loadStoredMessages();
         int totalMessagesToEnter = readInt(scan, "How many messages would you like to enter? ");
 
         Message helper = new Message();
@@ -64,6 +65,7 @@ public class ProgPOE {
             System.out.println("1) Send Messages");
             System.out.println("2) Show recently sent messages");
             System.out.println("3) Quit");
+            System.out.println("4) Stored Messages");
             menuChoice = readInt(scan, "Select an option: ");
 
             if (menuChoice == 1) {
@@ -75,7 +77,10 @@ public class ProgPOE {
                 }
             } else if (menuChoice == 2) {
                 System.out.println("Coming Soon.");
-            } else if (menuChoice == 3) {
+            } else if (menuChoice == 4) {
+    Message.loadStoredMessages();
+    System.out.println(helper.storedMessagesReport());
+} else if (menuChoice == 3) {
                 System.out.println("Exiting application. Goodbye!");
             } else {
                 System.out.println("Invalid option. Please choose 1, 2, or 3.");

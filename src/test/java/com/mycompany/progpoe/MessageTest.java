@@ -117,4 +117,28 @@ public class MessageTest {
         assertEquals(5, Message.getMessageHashes().size());
         assertEquals(5, Message.getMessageIDs().size());
     }
+    
+        @Test
+    public void testStoredMessagesReadFromJson() throws Exception {
+        Message.clearAllMessages();
+        java.io.File temp = java.io.File.createTempFile("stored", ".json");
+        Message.setStorageFile(temp.getAbsolutePath());
+        Message.setSender("Lisa Ngwenya");
+
+        Message first = new Message("+27838884567", "Where are you? You are late! I have asked you to be on time.", "2222222222", 1);
+        first.sentMessage(3);
+        first.storeMessage();
+        Message second = new Message("+27838884567", "Ok, I am leaving without you.", "5555555555", 4);
+        second.sentMessage(3);
+        second.storeMessage();
+
+        Message.loadStoredMessages();   // reads the JSON file back into the arrays
+
+        assertEquals(2, Message.getStoredMessages().size());
+        assertEquals("Ok, I am leaving without you.", Message.getStoredMessages().get(1));
+        assertTrue(new Message().storedMessagesReport().contains("Lisa Ngwenya"));
+
+        Message.clearAllMessages();
+        temp.delete();
+    }
 }
