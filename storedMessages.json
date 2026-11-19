@@ -2,7 +2,15 @@
   {
     "messageID": "8193780413",
     "messageHash": "81:1:HAIBOHOW",
+    "sender": "Unknown",
     "recipient": "+27892589632",
     "message": "Haibo kanjani? where and how?"
+  },
+  {
+    "messageID": "4806973523",
+    "messageHash": "48:0:HIABOUT",
+    "sender": "Lisa Ngwenya",
+    "recipient": "+27874563214",
+    "message": "HI there chomi out and about"
   }
 ]
