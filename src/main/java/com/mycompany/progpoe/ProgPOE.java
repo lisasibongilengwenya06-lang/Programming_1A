@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
- * Pop-up box app: registration and login (Part 1), QuickChat messaging (Part 2)
- * and stored messages (Part 3).
- *
  * @author Admin
  */
 public class ProgPOE {
@@ -23,7 +20,7 @@ public class ProgPOE {
         String password = ask("Enter a password");
         String cellPhoneNumber = ask("Enter your cell phone number");
         if (name == null || surname == null || username == null || password == null || cellPhoneNumber == null) {
-            return;   // the user closed a box, so stop
+            return;   
         }
 
         String registerMessage = account.registerUser(username, password, cellPhoneNumber);
@@ -91,7 +88,7 @@ public class ProgPOE {
         show("Total messages sent this session: " + helper.returnTotalMessages());
     }
 
-    /** Uses a for loop to collect the set number of messages. The loop counter is the message number. */
+    /** for loop to collect the set number of messages. The loop counter is the message number. */
     private static void enterMessages(Message helper, int totalMessagesToEnter) {
         for (int i = 0; i < totalMessagesToEnter; i++) {
             String heading = "Message " + (i + 1) + " of " + totalMessagesToEnter + "\n\n";
