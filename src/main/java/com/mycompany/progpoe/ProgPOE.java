@@ -4,6 +4,7 @@
 package com.mycompany.progpoe;
 
 import java.util.Scanner;
+import java.util.ArrayList;
 
 /**
  *
@@ -78,9 +79,8 @@ public class ProgPOE {
             } else if (menuChoice == 2) {
                 System.out.println("Coming Soon.");
             } else if (menuChoice == 4) {
-    Message.loadStoredMessages();
-    System.out.println(helper.storedMessagesReport());
-} else if (menuChoice == 3) {
+             storedMessagesMenu(scan, helper);
+}            else if (menuChoice == 3) {
                 System.out.println("Exiting application. Goodbye!");
             } else {
                 System.out.println("Invalid option. Please choose 1, 2, or 3.");
@@ -155,6 +155,54 @@ public class ProgPOE {
                 return Integer.parseInt(scan.nextLine().trim());
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a number.");
+            }
+        }
+    }
+
+    /** Shows the Stored Messages menu and runs the option the user picks. */
+    private static void storedMessagesMenu(Scanner scan, Message helper) {
+        Message.loadStoredMessages();
+        int choice = 0;
+        while (choice != 8) {
+            System.out.println("\n--- Stored Messages ---");
+            System.out.println("1) Display sender and recipient of all stored messages");
+            System.out.println("2) Display the longest stored message");
+            System.out.println("3) Search for a message ID");
+            System.out.println("4) Search messages for a recipient");
+            System.out.println("5) Delete a message using its hash");
+            System.out.println("6) Report of all stored messages");
+            System.out.println("7) Report of all sent messages");
+            System.out.println("8) Back to main menu");
+            choice = readInt(scan, "Select an option: ");
+
+            if (choice == 1) {
+                System.out.println(helper.storedSendersAndRecipients());
+            } else if (choice == 2) {
+                System.out.println(helper.longestStoredMessage());
+            } else if (choice == 3) {
+                System.out.print("Enter the message ID: ");
+                String id = scan.nextLine().trim();
+                System.out.println("Recipient: " + helper.recipientForMessageID(id));
+                System.out.println("Message  : " + helper.searchByMessageID(id));
+            } else if (choice == 4) {
+                System.out.print("Enter the recipient cell number: ");
+                ArrayList<String> found = helper.searchByRecipient(scan.nextLine().trim());
+                if (found.isEmpty()) {
+                    System.out.println("No messages found for that recipient.");
+                }
+                for (String text : found) {
+                    System.out.println("- " + text);
+                }
+            } else if (choice == 5) {
+                System.out.print("Enter the message hash: ");
+                System.out.println(helper.deleteByHash(scan.nextLine().trim()));
+            } else if (choice == 6) {
+                System.out.println(helper.storedMessagesReport());
+            } else if (choice == 7) {
+                String report = helper.printMessages();
+                System.out.println(report.isEmpty() ? "No sent messages." : report);
+            } else if (choice != 8) {
+                System.out.println("Invalid option. Please choose 1 to 8.");
             }
         }
     }

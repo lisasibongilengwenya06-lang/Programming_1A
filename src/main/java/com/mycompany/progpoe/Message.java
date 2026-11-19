@@ -334,4 +334,66 @@ public class Message {
         }
         return sb.toString();
     }
+    
+    /** Returns the sender and recipient of every stored message. */
+    public String storedSendersAndRecipients() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < flags.size(); i++) {
+            if (flags.get(i).equals("Stored")) {
+                sb.append("Sender: ").append(senders.get(i))
+                  .append(" | Recipient: ").append(recipients.get(i)).append("\n");
+            }
+        }
+        return sb.length() == 0 ? "No stored messages." : sb.toString();
+    }
+
+    /** Returns the longest stored message by comparing the length of each one. */
+    public String longestStoredMessage() {
+        String longest = "";
+        for (int i = 0; i < flags.size(); i++) {
+            if (flags.get(i).equals("Stored") && messageTexts.get(i).length() > longest.length()) {
+                longest = messageTexts.get(i);
+            }
+        }
+        return longest.isEmpty() ? "No stored messages." : longest;
+    }
+
+    /** Searches the message ID array and returns the matching message text. */
+    public String searchByMessageID(String id) {
+        int index = messageIDs.indexOf(id);
+        return index == -1 ? "Message ID not found." : messageTexts.get(index);
+    }
+
+    /** Searches the message ID array and returns the matching recipient. */
+    public String recipientForMessageID(String id) {
+        int index = messageIDs.indexOf(id);
+        return index == -1 ? "Message ID not found." : recipients.get(index);
+    }
+
+    /** Returns every sent or stored message for one recipient. */
+    public ArrayList<String> searchByRecipient(String recipient) {
+        ArrayList<String> found = new ArrayList<>();
+        for (int i = 0; i < recipients.size(); i++) {
+            boolean notDisregarded = !flags.get(i).equals("Disregard");
+            if (recipients.get(i).equals(recipient) && notDisregarded) {
+                found.add(messageTexts.get(i));
+            }
+        }
+        return found;
+    }
+
+    /** Deletes a stored message using its hash and updates the JSON file. */
+    public String deleteByHash(String hash) {
+        for (int i = 0; i < messageHashes.size(); i++) {
+            if (messageHashes.get(i).equals(hash) && flags.get(i).equals("Stored")) {
+                String text = messageTexts.get(i);
+                removeRow(i);
+                storedMessages.remove(text);
+                saveStoredMessages();
+                return "Message: \"" + text + "\" successfully deleted.";
+            }
+        }
+        return "No stored message found with that hash.";
+    }
 }
+
